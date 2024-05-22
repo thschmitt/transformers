@@ -647,6 +647,8 @@ class GemmaDecoderLayer(nn.Module):
 
         hidden_states = self.input_layernorm(hidden_states)
 
+        s = datetime.datetime.now()
+
         # Self Attention
         hidden_states, self_attn_weights, present_key_value = self.self_attn(
             hidden_states=hidden_states,
@@ -658,6 +660,14 @@ class GemmaDecoderLayer(nn.Module):
             cache_position=cache_position,
             **kwargs,
         )
+
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        idx = 17
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaDecoderLayer: hidden_states, self_attn_weights, present_key_value = self.self_attn()", "timing": 0.0}
+        timing[idx]["timing"] += e
+
         hidden_states = residual + hidden_states
 
         # Fully Connected
