@@ -125,7 +125,7 @@ class GemmaRMSNorm(nn.Module):
         # timing[idx]["timing"] += e
         # s = datetime.datetime.now()
 
-        a5 = x * a4
+        a5 = x * a3
         idx = 33
         if idx not in timing:
             timing[idx] = {"name": "GemmaRMSNorm: a5 = x * a4", "timing": 0.0}
