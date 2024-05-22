@@ -103,11 +103,21 @@ class GemmaRMSNorm(nn.Module):
         timing[idx]["timing"] += e
         s = datetime.datetime.now()
 
-        output = self._norm(x.float())
+        y = x.float()
 
         idx = 25
         if idx not in timing:
-            timing[idx] = {"name": "GemmaRMSNorm: output = self._norm(x.float())", "timing": 0.0}
+            timing[idx] = {"name": "GemmaRMSNorm: y = x.float()", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
+        output = self._norm(y)
+
+        idx = 26
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: output = self._norm(y)", "timing": 0.0}
         t = datetime.datetime.now()
         e = (t - s).total_seconds()
         timing[idx]["timing"] += e
@@ -117,7 +127,7 @@ class GemmaRMSNorm(nn.Module):
         # See https://github.com/huggingface/transformers/pull/29402
         output = output * (1.0 + self.weight.float())
 
-        idx = 26
+        idx = 27
         if idx not in timing:
             timing[idx] = {"name": "GemmaRMSNorm: output = output * (1.0 + self.weight.float())", "timing": 0.0}
         t = datetime.datetime.now()
@@ -127,7 +137,7 @@ class GemmaRMSNorm(nn.Module):
 
         o = output.type_as(x)
 
-        idx = 27
+        idx = 28
         if idx not in timing:
             timing[idx] = {"name": "GemmaRMSNorm: o = output.type_as(x)", "timing": 0.0}
         t = datetime.datetime.now()
