@@ -87,7 +87,57 @@ class GemmaRMSNorm(nn.Module):
         self.weight = nn.Parameter(torch.zeros(dim))
 
     def _norm(self, x):
-        return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps)
+        s = datetime.datetime.now()
+
+        a1 = x.pow(2)
+        idx = 29
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: a1 = x.pow(2)", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
+        a2 = a1.mean(-1, keepdim=True)
+        idx = 30
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: a2 = a1.mean(-1, keepdim=True)", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
+        a3 = a2 + self.eps
+        idx = 31
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: a3 = a2 + self.eps", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
+        a4 = torch.rsqrt(a3)
+        idx = 32
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: a4 = torch.rsqrt(a3)", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
+        a5 = x * a4
+        idx = 33
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: a5 = x * a4", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
+        return a5
+
+
+        # return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps)
 
     def forward(self, x):
 
