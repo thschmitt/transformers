@@ -645,8 +645,16 @@ class GemmaDecoderLayer(nn.Module):
 
         residual = hidden_states
 
+        s = datetime.datetime.now()
+
         hidden_states = self.input_layernorm(hidden_states)
 
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        idx = 17
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaDecoderLayer: hidden_states = self.input_layernorm(hidden_states)", "timing": 0.0}
+        timing[idx]["timing"] += e
         s = datetime.datetime.now()
 
         # Self Attention
@@ -663,18 +671,63 @@ class GemmaDecoderLayer(nn.Module):
 
         t = datetime.datetime.now()
         e = (t - s).total_seconds()
-        idx = 17
+        idx = 18
         if idx not in timing:
             timing[idx] = {"name": "GemmaDecoderLayer: hidden_states, self_attn_weights, present_key_value = self.self_attn()", "timing": 0.0}
         timing[idx]["timing"] += e
+        s = datetime.datetime.now()
 
         hidden_states = residual + hidden_states
+
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        idx = 19
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaDecoderLayer: hidden_states = residual + hidden_states", "timing": 0.0}
+        timing[idx]["timing"] += e
 
         # Fully Connected
+
+        s = datetime.datetime.now()
+
         residual = hidden_states
+
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        idx = 20
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaDecoderLayer: residual = hidden_states", "timing": 0.0}
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
         hidden_states = self.post_attention_layernorm(hidden_states)
+
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        idx = 21
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaDecoderLayer: hidden_states = self.post_attention_layernorm(hidden_states)", "timing": 0.0}
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
         hidden_states = self.mlp(hidden_states)
+
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        idx = 22
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaDecoderLayer: hidden_states = self.mlp(hidden_states)", "timing": 0.0}
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
         hidden_states = residual + hidden_states
+
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        idx = 23
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaDecoderLayer: hidden_states = residual + hidden_states", "timing": 0.0}
+        timing[idx]["timing"] += e
 
         outputs = (hidden_states,)
 
