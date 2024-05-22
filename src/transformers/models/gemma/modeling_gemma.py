@@ -996,6 +996,9 @@ class GemmaModel(GemmaPreTrainedModel):
                     cache_position,
                 )
             else:
+
+                s = datetime.datetime.now()
+
                 layer_outputs = decoder_layer(
                     hidden_states,
                     attention_mask=causal_mask,
@@ -1005,6 +1008,13 @@ class GemmaModel(GemmaPreTrainedModel):
                     use_cache=use_cache,
                     cache_position=cache_position,
                 )
+
+                t = datetime.datetime.now()
+                e = (t - s).total_seconds()
+                idx = 16
+                if idx not in timing:
+                    timing[idx] = {"name": "GemmaModel: layer_outputs = decoder_layer(", "timing": 0.0}
+                timing[idx]["timing"] += e
 
             hidden_states = layer_outputs[0]
 
