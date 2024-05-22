@@ -2701,6 +2701,9 @@ class GenerationMixin:
         print(f"generation time: {e1}")
         print(f"while time: {e2}")
         print(json.dumps(timing, indent=4))
+        import transformers
+        print(transformers.models.gemma.modeling_gemma.timing)
+        print(transformers.modeling_attn_mask_utils.timing)
         breakpoint()
 
         if streamer is not None:
