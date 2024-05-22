@@ -116,7 +116,8 @@ class GemmaRMSNorm(nn.Module):
         timing[idx]["timing"] += e
         s = datetime.datetime.now()
 
-        a4 = torch.rsqrt(a3)
+        # a4 = torch.rsqrt(a3)
+        a4 = 1.0 / torch.sqrt(a3)
         idx = 32
         if idx not in timing:
             timing[idx] = {"name": "GemmaRMSNorm: a4 = torch.rsqrt(a3)", "timing": 0.0}
