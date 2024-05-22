@@ -117,6 +117,7 @@ class GemmaRMSNorm(nn.Module):
         s = datetime.datetime.now()
 
         # a4 = torch.rsqrt(a3)
+        # very strange that `torch.rsqrt` is slow.
         a4 = 1.0 / torch.sqrt(a3)
         idx = 32
         if idx not in timing:
