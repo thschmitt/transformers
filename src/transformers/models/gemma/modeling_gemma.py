@@ -90,12 +90,52 @@ class GemmaRMSNorm(nn.Module):
         return x * torch.rsqrt(x.pow(2).mean(-1, keepdim=True) + self.eps)
 
     def forward(self, x):
+
+        s = datetime.datetime.now()
+
         self.weight = self.weight.to(x.device)
+
+        idx = 24
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: self.weight = self.weight.to(x.device)", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
         output = self._norm(x.float())
+
+        idx = 25
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: output = self._norm(x.float())", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
         # Llama does x.to(float16) * w whilst Gemma is (x * w).to(float16)
         # See https://github.com/huggingface/transformers/pull/29402
         output = output * (1.0 + self.weight.float())
-        return output.type_as(x)
+
+        idx = 26
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: output = output * (1.0 + self.weight.float())", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
+        o = output.type_as(x)
+
+        idx = 27
+        if idx not in timing:
+            timing[idx] = {"name": "GemmaRMSNorm: o = output.type_as(x)", "timing": 0.0}
+        t = datetime.datetime.now()
+        e = (t - s).total_seconds()
+        timing[idx]["timing"] += e
+        s = datetime.datetime.now()
+
+        return o
 
 
 ALL_LAYERNORM_LAYERS.append(GemmaRMSNorm)
